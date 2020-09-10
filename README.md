@@ -25,7 +25,7 @@ geoTS_id2, longitude2, latitude2, ts2_value1, ts2_value2, ..., ts2_valueN
 geoTS_idM, longitudeM, latitudeM, tsM_value1, tsM_value2, ..., tM_valueN
 ```
 
-Specifically:
-Column 1: The id/name of each geolocated time series
-Columns 2 and 3: The coordinates (longitude and latitude, in WGS84 format) 
+Specifically:\
+Column 1: The id/name of each geolocated time series\
+Columns 2 and 3: The coordinates (longitude and latitude, in WGS84 format)\
 Subsequent columns: The time series values (the time series should be of equal length and time-aligned)
