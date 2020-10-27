@@ -5,7 +5,7 @@ G. Chatzigeorgakidis, K. Patroumpas, D. Skoutas and S. Athanasiou, "A Visual Exp
 
 The application can be executed by first initiating the the back-end via the following command:
 ```
-java -jar btsrindex-0.0.1-SNAPSHOT.jar "path_to_input_dataset/input_dataset.csv"
+java -jar btsrindex-0.0.1-SNAPSHOT.jar
 ```
 
 Then, on a terminal located at the parent directory of the main.py file, issue the following command:
@@ -27,5 +27,5 @@ geoTS_idM, longitudeM, latitudeM, tsM_value1, tsM_value2, ..., tM_valueN
 
 Specifically:\
 Column 1: The id/name of each geolocated time series\
-Columns 2 and 3: The coordinates (longitude and latitude, in WGS84 format)\
+Columns 2 and 3: The coordinates (longitude and latitude, in EPSG:3627 format)\
 Subsequent columns: The time series values (the time series should be of equal length and time-aligned)
