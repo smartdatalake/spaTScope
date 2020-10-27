@@ -1,0 +1,27 @@
+.custom_button button.bk.bk-btn.bk-btn-default {
+    color: white;
+    font-size:12pt;
+    background-color: #72919F;
+    border-color: #828b8d;
+}
+
+.custom_button_selected button.bk.bk-btn.bk-btn-default {
+    color: white;
+    font-size:12pt;
+    background-color: #52ADD5;
+    border-color: #0083BC;
+}
+
+.custom_button_fetch button.bk.bk-btn.bk-btn-default {
+    color: white;
+    font-size:12pt;
+    background-color: #485C65;
+    border-color: #363a3a;
+}
+
+.custom_button_reset button.bk.bk-btn.bk-btn-default {
+    color: white;
+    font-size:12pt;
+    background-color: #485C65;
+    border-color: #363a3a;
+}

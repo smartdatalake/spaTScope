@@ -4,21 +4,43 @@
 {% endblock %}
 
 {% block contents %}
-
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    {{ bokeh_css }}
+    {{ bokeh_js }}
+    <style type="text/css">{% include 'styles.css' %}</style>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>spaTScope</title>
+    <style>
+      #main{
+        display: block;
+        height: 98vh;
+        width: 99vw;
+      }
+      #timeline{
+        width: 27.5%;
+        height: 100%;
+        overflow: scroll;
+        float: left;
+        display: inline-block;
+      }
+      #map_div{
+        width: 72.5%;
+        height: 100%;
+        float: right;
+        display: inline-block;
+      }
+    </style>
   </head>
   <body>
 
-  <div style="display: block">
-    <div style="overflow:scroll; height:98vh; float:left; display: inline-block;">
+  <div id="main">
+    <div id="timeline">
         {{ embed(roots.ts_plots) | safe }}
     </div>
-    <div style="height:98vh; width:73vw; float:right; display: inline-block;">
-        {{ embed(roots.map) | safe }}
+    <div id="map_div">
+        {{ embed(roots.map_div) | safe }}
     </div>
   </div>
 
