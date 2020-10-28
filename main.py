@@ -78,7 +78,7 @@ class show_message(Toplevel):
 		self.attributes('-topmost',True)
 		self.after_idle(self.attributes, '-topmost',False)
 
-class GUI:
+class GUI_local:
 	def __init__(self, window): 
 		global input_text1, input_text2, filename, cancelled, local_entry, remote_entry
 		cancelled = True
@@ -86,17 +86,12 @@ class GUI:
 
 		window.title("Open Dataset...")
 		window.resizable(0, 0) # this prevents from resizing the window
-		window.geometry("812x110")
-
-		ttk.Button(window, text = "Local File", command = lambda: self.set_path_local_field()).grid(row = 0, column=0, ipadx=15, ipady=15)
+		window.geometry("763x35")
+		
 		local_entry = ttk.Entry(window, width = 70)
-		local_entry.grid(row = 0, column = 1, ipadx=15, ipady=14)
-		local = ttk.Button(window, text = "OK", command = lambda: self.get_filepath1()).grid(row = 0, column=3, ipadx=5, ipady=15)
-
-		but = ttk.Button(window, text = "Remote File", state="disabled").grid(row = 1, column=0, ipadx=8, ipady=15)
-		remote_entry = ttk.Entry(window, width = 70)
-		remote_entry.grid(row = 1, column = 1, ipadx=15, ipady=14)
-		remote = ttk.Button(window, text = "OK", command = lambda: self.get_filepath2()).grid(row = 1, column=3, ipadx=5, ipady=15)
+		local_entry.grid(row = 0, column = 0, ipadx=5, ipady=4)
+		ttk.Button(window, text = "Browse", command = lambda: self.set_path_local_field()).grid(row = 0, column=1, ipadx=5, ipady=5)
+		local = ttk.Button(window, text = "OK", command = lambda: self.get_filepath()).grid(row = 0, column=2, ipadx=5, ipady=5)
 
 	def set_path_local_field(self):
 		global local_entry, window, input_text1
@@ -104,20 +99,31 @@ class GUI:
 		local_entry.delete(0, "end")
 		local_entry.insert(0, self.path)
 
-
-	def get_filepath1(self):
+	def get_filepath(self):
 		global window, filename, cancelled, local_entry
 		cancelled = False
 		filename = local_entry.get()
 		window.destroy()
-		window.quit()
 
-	def get_filepath2(self):
+class GUI_remote:
+	def __init__(self, window): 
+		global input_text1, input_text2, filename, cancelled, local_entry, remote_entry
+		cancelled = True
+		self.path = ''
+
+		window.title("Open Dataset...")
+		window.resizable(0, 0) # this prevents from resizing the window
+		window.geometry("673x35")
+
+		remote_entry = ttk.Entry(window, width = 70)
+		remote_entry.grid(row = 0, column = 0, ipadx=5, ipady=4)
+		remote = ttk.Button(window, text = "OK", command = lambda: self.get_filepath()).grid(row = 0, column=1, ipadx=5, ipady=5)
+
+	def get_filepath(self):
 		global window, filename, cancelled, remote_entry
 		cancelled = False
 		filename = remote_entry.get()
 		window.destroy()
-		window.quit()
 
 ####################################################################################
 #################################### FUNCTIONS #####################################
@@ -465,18 +471,19 @@ def threaded_function():
 
 def selected_dataset(event):
 	global query_x1, query_x2, query_y1, query_y2, default_query_x1, default_query_x2, default_query_y1, default_query_y2, window, message, filename, response, build_index_url, cancelled
-	window = tkinter.Tk()
-	gui = GUI(window)
 
-	#Gets the requested values of the height and widht.
-	windowWidth = 812
-	windowHeight = 110
-	 
-	# Gets both half the screen width/height and window width/height
+	window = tkinter.Tk()
+	if event.item == "Open Local":
+		gui = GUI_local(window)
+		windowWidth = 763
+		windowHeight = 55
+	else:
+		gui = GUI_remote(window)
+		windowWidth = 673
+		windowHeight = 55
+
 	positionRight = int(window.winfo_screenwidth()/2 - windowWidth/2)
 	positionDown = int(window.winfo_screenheight()/2 - windowHeight/2)
-	 
-	# Positions the window in the center of the page.
 	window.geometry("+{}+{}".format(positionRight, positionDown))
 	window.lift()
 	window.attributes('-topmost',True)
@@ -521,7 +528,7 @@ def selected_dataset(event):
 			default_query_y2 = query_y2 = c_query_y1 + new_c_y_diff
 			update_plot()
 		else:
-			scale_f = x_diff/y_diff
+			scale_f = y_diff/x_diff
 			new_c_x_diff = c_y_diff/scale_f
 			map.x_range.start = c_query_x1
 			map.x_range.end = c_query_x1 + new_c_x_diff
@@ -710,8 +717,9 @@ noOfTSsummaries = Dropdown(css_classes=['custom_button'], menu=menuTSsummaries)
 noOfTSsummaries.label = str(default_k1) + " bundles"
 noOfTSsummaries.on_click(selected_k1)
 
-selecteDatasetButton = Button(label="Open Dataset", css_classes=['custom_button'])
-selecteDatasetButton.on_event(ButtonClick, selected_dataset)
+selectDataset = [("Open Local", "Open Local"), ("Open Remote", "Open Remote")]
+selectDatasetDropdown = Dropdown(label="Open Dataset", css_classes=['custom_button'], menu=selectDataset)
+selectDatasetDropdown.on_click(selected_dataset)
 
 menuScale = [("1:500", "Scale 1:500"), ("1:5000", "Scale 1:5000"), ("1:10000", "Scale 1:10000"), ("1:15000", "Scale 1:15000"), ("1:20000", "Scale 1:20000"), ("1:25000", "Scale 1:25000")]
 scaleSelect = Dropdown(css_classes=['custom_button'], menu=menuScale)
@@ -725,7 +733,7 @@ buttons[0].css_classes = ['custom_button_selected']
 # Add everything to layouts and to the final application
 ts_plots = column(ts_plots)
 ts_plots.sizing_mode = 'stretch_both'
-func_buttons = row(fetchButton, resetButton, selecteDatasetButton, noOfTSsummaries, scaleSelect)
+func_buttons = row(fetchButton, resetButton, selectDatasetDropdown, noOfTSsummaries, scaleSelect)
 func_buttons.sizing_mode = 'stretch_width'
 lay1 = column(ts_plots, name="ts_plots")
 lay2 = column(func_buttons, p, name="map_div")
